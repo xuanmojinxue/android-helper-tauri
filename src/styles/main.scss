@@ -1,0 +1,249 @@
+// 主题变量
+:root {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-card: #1f2940;
+  --bg-hover: #2a3f5f;
+  --text-primary: #eaeaea;
+  --text-secondary: #a0a0a0;
+  --accent: #4f8cff;
+  --accent-hover: #6ba3ff;
+  --success: #4caf50;
+  --warning: #ff9800;
+  --danger: #f44336;
+  --border: #2a3f5f;
+  --shadow: rgba(0, 0, 0, 0.3);
+}
+
+// 全局样式
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+// 滚动条
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+  
+  &:hover {
+    background: var(--bg-hover);
+  }
+}
+
+// 按钮
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  
+  &-primary {
+    background: var(--accent);
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+  }
+  
+  &-success {
+    background: var(--success);
+    color: white;
+    
+    &:hover:not(:disabled) {
+      filter: brightness(1.1);
+    }
+  }
+  
+  &-danger {
+    background: var(--danger);
+    color: white;
+    
+    &:hover:not(:disabled) {
+      filter: brightness(1.1);
+    }
+  }
+  
+  &-ghost {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    
+    &:hover:not(:disabled) {
+      background: var(--bg-hover);
+    }
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+}
+
+// 输入框
+.input {
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: border-color 0.2s;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  
+  &::placeholder {
+    color: var(--text-secondary);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// 卡片
+.card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  
+  &-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+// 列表
+.list {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  
+  &-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid var(--border);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    &:hover {
+      background: var(--bg-hover);
+    }
+    
+    &.active {
+      background: var(--accent);
+    }
+  }
+}
+
+// 网格布局
+.grid {
+  display: grid;
+  gap: 12px;
+  
+  &-2 { grid-template-columns: repeat(2, 1fr); }
+  &-3 { grid-template-columns: repeat(3, 1fr); }
+  &-4 { grid-template-columns: repeat(4, 1fr); }
+  &-5 { grid-template-columns: repeat(5, 1fr); }
+  &-6 { grid-template-columns: repeat(6, 1fr); }
+}
+
+// 弹性布局
+.flex {
+  display: flex;
+  
+  &-center { align-items: center; }
+  &-between { justify-content: space-between; }
+  &-gap { gap: 12px; }
+  &-wrap { flex-wrap: wrap; }
+}
+
+// 状态标签
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  
+  &-success {
+    background: rgba(76, 175, 80, 0.2);
+    color: var(--success);
+  }
+  
+  &-warning {
+    background: rgba(255, 152, 0, 0.2);
+    color: var(--warning);
+  }
+  
+  &-danger {
+    background: rgba(244, 67, 54, 0.2);
+    color: var(--danger);
+  }
+}
+
+// 动画
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+// 工具类
+.text-center { text-align: center; }
+.text-secondary { color: var(--text-secondary); }
+.mt-12 { margin-top: 12px; }
+.mb-12 { margin-bottom: 12px; }

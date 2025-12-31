@@ -1,0 +1,3 @@
+List of devices attached
+921cf498	device
+
