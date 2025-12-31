@@ -3,6 +3,12 @@ use std::path::PathBuf;
 use std::env;
 use serde::{Deserialize, Serialize};
 
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
+
+#[cfg(target_os = "windows")]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AdbDevice {
     pub serial: String,
@@ -39,6 +45,15 @@ fn get_tool_path(tool: &str) -> String {
 
 fn run_command(cmd: &str, args: &[&str]) -> Result<String, String> {
     let tool_path = get_tool_path(cmd);
+    
+    #[cfg(target_os = "windows")]
+    let output = Command::new(&tool_path)
+        .args(args)
+        .creation_flags(CREATE_NO_WINDOW)
+        .output()
+        .map_err(|e| format!("执行 {} 失败: {}", tool_path, e))?;
+    
+    #[cfg(not(target_os = "windows"))]
     let output = Command::new(&tool_path)
         .args(args)
         .output()
@@ -218,10 +233,20 @@ fn start_scrcpy(args: Vec<String>) -> Result<(), String> {
     }
     
     let args_ref: Vec<&str> = args.iter().map(|s| s.as_str()).collect();
+    
+    #[cfg(target_os = "windows")]
+    Command::new(&scrcpy_path)
+        .args(&args_ref)
+        .creation_flags(CREATE_NO_WINDOW)
+        .spawn()
+        .map_err(|e| format!("启动 scrcpy 失败: {}", e))?;
+    
+    #[cfg(not(target_os = "windows"))]
     Command::new(&scrcpy_path)
         .args(&args_ref)
         .spawn()
         .map_err(|e| format!("启动 scrcpy 失败: {}", e))?;
+    
     Ok(())
 }
 
@@ -296,6 +321,15 @@ fn start_record(device: Option<String>, output_dir: Option<String>) -> Result<St
     }
     
     let args_ref: Vec<&str> = args.iter().map(|s| s.as_str()).collect();
+    
+    #[cfg(target_os = "windows")]
+    Command::new("scrcpy")
+        .args(&args_ref)
+        .creation_flags(CREATE_NO_WINDOW)
+        .spawn()
+        .map_err(|e| e.to_string())?;
+    
+    #[cfg(not(target_os = "windows"))]
     Command::new("scrcpy")
         .args(&args_ref)
         .spawn()
@@ -474,6 +508,14 @@ fn analyze_apk(path: String) -> Result<String, String> {
     
     for aapt in &aapt_paths {
         let aapt_str = aapt.to_string_lossy().to_string();
+        
+        #[cfg(target_os = "windows")]
+        let result = Command::new(&aapt_str)
+            .args(&["dump", "badging", &path])
+            .creation_flags(CREATE_NO_WINDOW)
+            .output();
+        
+        #[cfg(not(target_os = "windows"))]
         let result = Command::new(&aapt_str)
             .args(&["dump", "badging", &path])
             .output();
